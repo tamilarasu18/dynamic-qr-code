@@ -7,6 +7,7 @@ import { createQRCode, getUserQRCodeCount } from "@/lib/firestore";
 import QRCodeLib from "qrcode";
 import Link from "next/link";
 import { ChevronLeft, QrCode, Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CreateQRPage() {
   const { user, loading } = useAuth();
@@ -93,8 +94,36 @@ export default function CreateQRPage() {
 
   if (loading || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-surface">
+        <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+          <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3 sm:px-6">
+            <Skeleton className="h-8 w-16" />
+            <Skeleton className="h-5 w-32" />
+          </div>
+        </header>
+        <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div className="rounded-xl border border-border bg-background p-6">
+              <Skeleton className="mb-2 h-7 w-32" />
+              <Skeleton className="mb-6 h-4 w-64" />
+              <div className="space-y-4">
+                <div>
+                  <Skeleton className="mb-2 h-4 w-12" />
+                  <Skeleton className="h-10 w-full rounded-lg" />
+                </div>
+                <div>
+                  <Skeleton className="mb-2 h-4 w-24" />
+                  <Skeleton className="h-10 w-full rounded-lg" />
+                </div>
+                <Skeleton className="h-10 w-full rounded-lg" />
+              </div>
+            </div>
+            <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-background p-6">
+              <Skeleton className="mb-4 h-4 w-24" />
+              <Skeleton className="aspect-square w-[200px] rounded-xl" />
+            </div>
+          </div>
+        </main>
       </div>
     );
   }

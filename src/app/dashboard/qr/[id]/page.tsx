@@ -23,6 +23,7 @@ import {
   X,
   Loader2,
 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function QRDetailPage() {
   const { user, loading } = useAuth();
@@ -163,8 +164,77 @@ export default function QRDetailPage() {
 
   if (loading || loadingData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-surface">
+        {/* Header Skeleton */}
+        <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
+            <Skeleton className="h-8 w-24 rounded-lg" />
+            <Skeleton className="h-8 w-24 rounded-lg" />
+          </div>
+        </header>
+
+        <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+          <div className="mb-8 grid gap-6 lg:grid-cols-3">
+            {/* QR Code Card Skeleton */}
+            <div className="flex flex-col items-center rounded-xl border border-border bg-background p-6">
+              <Skeleton className="mb-4 h-[240px] w-[240px] rounded-lg" />
+              <div className="flex w-full gap-2">
+                <Skeleton className="h-9 flex-1 rounded-lg" />
+                <Skeleton className="h-9 flex-1 rounded-lg" />
+              </div>
+            </div>
+
+            {/* Info Skeleton */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="rounded-xl border border-border bg-background p-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <Skeleton className="h-7 w-48 rounded-lg" />
+                  <Skeleton className="h-6 w-20 rounded-full" />
+                </div>
+                <Skeleton className="mb-4 h-16 w-full rounded-lg" />
+                <Skeleton className="h-24 w-full rounded-lg" />
+                <Skeleton className="mt-3 h-4 w-32 rounded-lg" />
+              </div>
+            </div>
+          </div>
+
+          {/* Analytics Skeleton */}
+          <Skeleton className="mb-4 h-7 w-32 rounded-lg" />
+          <div className="mb-6 grid gap-4 sm:grid-cols-3">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-border bg-background p-5"
+              >
+                <Skeleton className="mb-2 h-4 w-20" />
+                <Skeleton className="h-8 w-16" />
+              </div>
+            ))}
+          </div>
+
+          {/* Chart Skeleton */}
+          <div className="mb-6 rounded-xl border border-border bg-background p-6">
+            <Skeleton className="mb-4 h-5 w-40" />
+            <Skeleton className="h-[160px] w-full rounded-lg" />
+          </div>
+
+          {/* Table Skeleton */}
+          <div className="rounded-xl border border-border bg-background p-6">
+            <Skeleton className="mb-4 h-5 w-32" />
+            <div className="space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex justify-between border-b border-border/50 pb-2"
+                >
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -210,7 +280,7 @@ export default function QRDetailPage() {
                 height={240}
                 className="mb-4 rounded-lg"
               />
-              <div className="flex w-full gap-2">
+              <div className="flex w-full flex-col gap-2 sm:flex-row">
                 <button
                   onClick={handleDownload}
                   className="focus-ring flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:border-primary/30 hover:bg-primary-light/50"
@@ -428,13 +498,13 @@ export default function QRDetailPage() {
                 <table className="w-full text-left text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="pb-2 pr-4 text-xs font-medium text-muted">
+                      <th className="pb-2 pr-4 text-xs font-medium text-muted whitespace-nowrap">
                         Time
                       </th>
-                      <th className="pb-2 pr-4 text-xs font-medium text-muted">
+                      <th className="pb-2 pr-4 text-xs font-medium text-muted whitespace-nowrap">
                         Device
                       </th>
-                      <th className="pb-2 text-xs font-medium text-muted">
+                      <th className="pb-2 text-xs font-medium text-muted whitespace-nowrap">
                         Referrer
                       </th>
                     </tr>
@@ -456,13 +526,13 @@ export default function QRDetailPage() {
 
                       return (
                         <tr key={scan.id} className="border-b border-border/50">
-                          <td className="py-2.5 pr-4 text-xs text-foreground">
+                          <td className="py-2.5 pr-4 text-xs text-foreground whitespace-nowrap">
                             {scan.timestamp.toLocaleString()}
                           </td>
-                          <td className="py-2.5 pr-4 text-xs text-muted">
+                          <td className="py-2.5 pr-4 text-xs text-muted whitespace-nowrap">
                             {device}
                           </td>
-                          <td className="py-2.5 text-xs text-muted">
+                          <td className="py-2.5 text-xs text-muted whitespace-nowrap">
                             {scan.referrer || "Direct"}
                           </td>
                         </tr>

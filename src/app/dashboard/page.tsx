@@ -15,6 +15,7 @@ import {
   LogOut,
   ExternalLink,
 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardPage() {
   const { user, loading, signOut } = useAuth();
@@ -126,10 +127,16 @@ export default function DashboardPage() {
               Your QR Codes
             </h1>
             <p className="mt-1 text-sm text-muted">
-              {qrCodes.length} of 5 QR codes used
+              {loadingQR ? (
+                <Skeleton className="h-4 w-24" />
+              ) : (
+                `${qrCodes.length} of 5 QR codes used`
+              )}
             </p>
           </div>
-          {isAtLimit ? (
+          {loadingQR ? (
+            <Skeleton className="h-10 w-32 rounded-lg" />
+          ) : isAtLimit ? (
             <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700">
               <AlertTriangle className="h-4 w-4" />
               Limit reached (5/5)
@@ -137,7 +144,7 @@ export default function DashboardPage() {
           ) : (
             <Link
               href="/dashboard/create"
-              className="focus-ring inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-hover"
+              className="focus-ring flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-hover sm:w-auto"
             >
               <Plus className="h-4 w-4" strokeWidth={2.5} />
               Create QR Code
@@ -147,16 +154,40 @@ export default function DashboardPage() {
 
         {/* Usage bar */}
         <div className="mb-8 overflow-hidden rounded-full bg-primary-light/50">
-          <div
-            className="h-2 rounded-full bg-primary"
-            style={{ width: `${(qrCodes.length / 5) * 100}%` }}
-          />
+          {loadingQR ? (
+            <Skeleton className="h-2 w-full rounded-full" />
+          ) : (
+            <div
+              className="h-2 rounded-full bg-primary transition-all duration-500"
+              style={{ width: `${(qrCodes.length / 5) * 100}%` }}
+            />
+          )}
         </div>
 
         {/* Content */}
         {loadingQR ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="overflow-hidden rounded-xl border border-border bg-background"
+              >
+                <div className="p-5">
+                  <div className="mb-3 flex items-start justify-between">
+                    <div className="w-full">
+                      <Skeleton className="mb-2 h-5 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                    <Skeleton className="ml-2 h-6 w-12 rounded-full" />
+                  </div>
+                  <Skeleton className="mb-3 h-8 w-full rounded-lg" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-9 flex-1 rounded-lg" />
+                    <Skeleton className="h-9 w-20 rounded-lg" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : qrCodes.length === 0 ? (
           /* Empty state */
