@@ -3,7 +3,14 @@
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { QrCode, Zap, BarChart3, ShieldCheck, Loader2 } from "lucide-react";
+import {
+  QrCode,
+  Zap,
+  BarChart3,
+  ShieldCheck,
+  Loader2,
+  ExternalLink,
+} from "lucide-react";
 
 export default function LoginPage() {
   const { user, loading, signInWithGoogle } = useAuth();
@@ -129,6 +136,15 @@ export default function LoginPage() {
         <p className="mt-6 text-center text-xs text-muted">
           Free tier — up to 5 dynamic QR codes per account
         </p>
+        <a
+          href="https://tamilarasu-portfolio.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mx-auto mt-3 flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary-hover"
+        >
+          Built by Tamilarasu
+          <ExternalLink className="h-3 w-3" />
+        </a>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   Loader2,
   Trash2,
   LogOut,
+  ExternalLink,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -82,6 +83,15 @@ export default function DashboardPage() {
             <span className="text-sm font-semibold text-foreground">
               Dynamic QR
             </span>
+            <a
+              href="https://tamilarasu-portfolio.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden items-center gap-1 rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted hover:border-primary/30 hover:text-primary sm:flex"
+            >
+              by Tamilarasu
+              <ExternalLink className="h-2.5 w-2.5" />
+            </a>
           </div>
 
           <div className="flex items-center gap-3">
