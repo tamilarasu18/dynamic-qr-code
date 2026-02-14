@@ -1,5 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,10 +16,17 @@ const firebaseConfig = {
 // Initialize Firebase (prevent re-initialization in dev with HMR)
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
+// Auth
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+// Firestore
+const db = getFirestore(app);
+
 // Analytics — only initialize in the browser (not during SSR)
 const analytics =
   typeof window !== "undefined"
     ? isSupported().then((yes) => (yes ? getAnalytics(app) : null))
     : null;
 
-export { app, analytics };
+export { app, auth, googleProvider, db, analytics };
