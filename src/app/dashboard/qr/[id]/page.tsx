@@ -17,6 +17,7 @@ import {
   ChevronLeft,
   Trash2,
   Download,
+  ExternalLink,
   Pencil,
   Save,
   X,
@@ -209,13 +210,24 @@ export default function QRDetailPage() {
                 height={240}
                 className="mb-4 rounded-lg"
               />
-              <button
-                onClick={handleDownload}
-                className="focus-ring flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:border-primary/30 hover:bg-primary-light/50"
-              >
-                <Download className="h-4 w-4" />
-                Download PNG
-              </button>
+              <div className="flex w-full gap-2">
+                <button
+                  onClick={handleDownload}
+                  className="focus-ring flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:border-primary/30 hover:bg-primary-light/50"
+                >
+                  <Download className="h-4 w-4" />
+                  Download
+                </button>
+                <a
+                  href={`${baseUrl}/api/scan/${qrCode.shortCode}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="focus-ring flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Open Link
+                </a>
+              </div>
             </div>
 
             {/* Info */}

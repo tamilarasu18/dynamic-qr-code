@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeApp, getApps, cert } from "firebase-admin/app";
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import {
+  collection,
+  query,
+  where,
+  limit,
+  getDocs,
+  addDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-// Initialize Firebase Admin (server-side)
-function getAdminDb() {
-  if (!getApps().length) {
-    // Use application default credentials or project ID for Firestore
-    initializeApp({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    });
-  }
-  return getFirestore();
-}
+export const dynamic = "force-dynamic";
 
 export async function GET(
   request: NextRequest,
@@ -20,12 +20,17 @@ export async function GET(
   const { code } = await params;
 
   try {
-    const db = getAdminDb();
-    const snapshot = await db
-      .collection("qrCodes")
-      .where("shortCode", "==", code)
-      .limit(1)
-      .get();
+    // Guard: if Firebase is not initialized (no API key), return error
+    if (!db) {
+      return new NextResponse("Service unavailable", { status: 503 });
+    }
+
+    const q = query(
+      collection(db, "qrCodes"),
+      where("shortCode", "==", code),
+      limit(1),
+    );
+    const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
       return new NextResponse("QR code not found", { status: 404 });
@@ -41,7 +46,7 @@ export async function GET(
 
     // Fire-and-forget: log scan + increment count
     Promise.all([
-      db.collection("scans").add({
+      addDoc(collection(db, "scans"), {
         qrCodeId: qrDoc.id,
         userId: qrData.userId,
         timestamp: new Date(),
@@ -49,7 +54,7 @@ export async function GET(
         referrer,
         country: "",
       }),
-      qrDoc.ref.update({ scanCount: FieldValue.increment(1) }),
+      updateDoc(qrDoc.ref, { scanCount: increment(1) }),
     ]).catch((err) => console.error("Scan logging error:", err));
 
     // Redirect to target URL
