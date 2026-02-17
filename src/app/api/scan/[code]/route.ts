@@ -40,12 +40,12 @@ export async function GET(
     const qrData = qrDoc.data();
     const targetUrl = qrData.targetUrl;
 
-    // Log the scan asynchronously (don't block the redirect)
+    // Log the scan and increment count before redirecting
     const userAgent = request.headers.get("user-agent") || "";
     const referrer = request.headers.get("referer") || "";
 
-    // Fire-and-forget: log scan + increment count
-    Promise.all([
+    // Await the writes so they complete before the serverless function exits
+    await Promise.all([
       addDoc(collection(db, "scans"), {
         qrCodeId: qrDoc.id,
         userId: qrData.userId,
@@ -55,7 +55,7 @@ export async function GET(
         country: "",
       }),
       updateDoc(qrDoc.ref, { scanCount: increment(1) }),
-    ]).catch((err) => console.error("Scan logging error:", err));
+    ]);
 
     // Redirect to target URL
     return NextResponse.redirect(targetUrl, { status: 302 });
